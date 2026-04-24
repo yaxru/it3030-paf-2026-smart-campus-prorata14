@@ -1,17 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// Member 01 - UI/UX Layout: App router configuration
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import DashboardLayout from "./components/DashboardLayout";
+import LoginPage from "./pages/LoginPage";
+import ResourcesPage from "./pages/ResourcesPage";
+import BookingsPage from "./pages/BookingsPage";
+import TicketsPage from "./pages/TicketsPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Navigate to="resources" replace />} />
+          <Route path="resources" element={<ResourcesPage />} />
+          <Route path="bookings" element={<BookingsPage />} />
+          <Route path="tickets" element={<TicketsPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
