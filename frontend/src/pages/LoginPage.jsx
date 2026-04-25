@@ -5,13 +5,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="bg-white border-2 border-white p-10 max-w-sm w-full">
+    <div className="relative min-h-screen flex items-center justify-center">
+      {/* Background image */}
+      <img
+        className="absolute inset-0 h-full w-full object-cover"
+        src="https://static.sliit.lk/wp-content/uploads/2018/01/Faculty-Societies.jpg"
+        alt="background"
+      />
+      
+      <div className="absolute inset-0 bg-black/60" />
+
+      {/* Card */}
+      <div className="relative z-10 bg-white border-2 border-white p-10 max-w-sm w-full">
         <h1 className="font-mono text-2xl uppercase tracking-widest mb-2 text-black">
           Smart Campus
         </h1>
         <p className="font-mono text-xs text-black/50 uppercase tracking-widest mb-8">
-          SLIIT — PAF 2026
+          SLIIT - PAF 2026
         </p>
 
         <button
