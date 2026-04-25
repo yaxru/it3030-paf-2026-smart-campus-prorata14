@@ -16,7 +16,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Card */}
-      <div className="relative z-10 bg-white border-2 border-white p-10 max-w-sm w-full">
+      <div className="relative z-10 bg-zinc-100 border-2 border-white p-10 max-w-sm w-full">
         <h1 className="font-mono text-2xl uppercase tracking-widest mb-2 text-black">
           Smart Campus
         </h1>
@@ -28,7 +28,7 @@ export default function LoginPage() {
           onClick={handleLogin}
           className="w-full flex items-center justify-center gap-3 border-2 border-black
                      px-4 py-3 font-mono text-sm uppercase tracking-widest
-                     hover:bg-black hover:text-white transition-colors"
+                     hover:bg-zinc-800 hover:text-white transition-colors"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path

@@ -33,34 +33,34 @@ export default function NotificationsPage() {
 
   return (
     <div>
-      <h2 className="font-mono text-lg uppercase tracking-widest mb-6 border-b-2 border-black pb-2">
+      <h2 className="font-mono text-lg uppercase tracking-widest mb-6 border-b-2 border-zinc-900 pb-2 text-zinc-900">
         Notifications
       </h2>
 
       {loading ? (
-        <p className="font-mono text-xs text-black/40">Loading...</p>
+        <p className="font-mono text-xs text-zinc-500">Loading...</p>
       ) : (
         <div className="space-y-2">
           {notifications.map((n) => (
             <div
               key={n.id}
               className={`border-2 p-4 flex items-start justify-between
-                ${n.isRead ? "border-black/20 bg-gray-50" : "border-black bg-white"}`}
+                ${n.isRead ? "border-zinc-200 bg-zinc-50" : "border-zinc-900 bg-white"}`}
             >
               <div>
                 <p
-                  className={`font-mono text-sm ${n.isRead ? "text-black/40" : "text-black"}`}
+                  className={`font-mono text-sm ${n.isRead ? "text-zinc-400" : "text-zinc-800"}`}
                 >
                   {n.message}
                 </p>
-                <p className="font-mono text-[10px] text-black/30 mt-1 uppercase tracking-widest">
+                <p className="font-mono text-[10px] text-zinc-400 mt-1 uppercase tracking-widest">
                   {new Date(n.createdAt).toLocaleString()}
                 </p>
               </div>
               {!n.isRead && (
                 <button
                   onClick={() => markRead(n.id)}
-                  className="font-mono text-[10px] uppercase tracking-widest border border-black px-2 py-1 ml-4 shrink-0 hover:bg-black hover:text-white transition-colors"
+                  className="font-mono text-[10px] uppercase tracking-widest border border-zinc-900 px-2 py-1 ml-4 shrink-0 hover:bg-zinc-900 hover:text-white transition-colors text-zinc-900"
                 >
                   Mark Read
                 </button>
@@ -68,7 +68,7 @@ export default function NotificationsPage() {
             </div>
           ))}
           {notifications.length === 0 && (
-            <p className="font-mono text-xs text-black/40">No notifications.</p>
+            <p className="font-mono text-xs text-zinc-500">No notifications.</p>
           )}
         </div>
       )}

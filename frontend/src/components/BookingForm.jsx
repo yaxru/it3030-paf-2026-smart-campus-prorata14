@@ -80,15 +80,15 @@ export default function BookingForm({ resourceId, onSuccess }) {
   };
 
   return (
-    <div className="bg-white border-2 border-black p-6 max-w-lg">
-      <h2 className="font-mono text-xl font-bold uppercase tracking-widest mb-6 border-b-2 border-black pb-2">
+    <div className="bg-white border-2 border-zinc-900 p-6 max-w-lg">
+      <h2 className="font-mono text-xl font-bold uppercase tracking-widest mb-6 border-b-2 border-zinc-900 pb-2 text-zinc-900">
         Request Booking
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Resource */}
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest mb-1">
+          <label className="block font-mono text-xs uppercase tracking-widest mb-1 text-zinc-600">
             Resource
           </label>
           <select
@@ -96,7 +96,7 @@ export default function BookingForm({ resourceId, onSuccess }) {
             value={form.resourceId}
             onChange={handleChange}
             required
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-zinc-800"
           >
             <option value="">— select a resource —</option>
             {resources.map((r) => (
@@ -110,7 +110,7 @@ export default function BookingForm({ resourceId, onSuccess }) {
 
         {/* Purpose */}
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest mb-1">
+          <label className="block font-mono text-xs uppercase tracking-widest mb-1 text-zinc-600">
             Purpose
           </label>
           <input
@@ -119,14 +119,14 @@ export default function BookingForm({ resourceId, onSuccess }) {
             value={form.purpose}
             onChange={handleChange}
             required
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-zinc-800"
             placeholder="e.g. Group study session"
           />
         </div>
 
         {/* Start Time */}
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest mb-1">
+          <label className="block font-mono text-xs uppercase tracking-widest mb-1 text-zinc-600">
             Start Time
           </label>
           <input
@@ -135,13 +135,13 @@ export default function BookingForm({ resourceId, onSuccess }) {
             value={form.startTime}
             onChange={handleChange}
             required
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-zinc-800"
           />
         </div>
 
         {/* End Time */}
         <div>
-          <label className="block font-mono text-xs uppercase tracking-widest mb-1">
+          <label className="block font-mono text-xs uppercase tracking-widest mb-1 text-zinc-600">
             End Time
           </label>
           <input
@@ -151,13 +151,13 @@ export default function BookingForm({ resourceId, onSuccess }) {
             onChange={handleChange}
             required
             min={form.startTime}
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-zinc-800"
           />
         </div>
 
         {/* Error message */}
         {error && (
-          <p className="font-mono text-xs text-red-600 border border-red-600 px-3 py-2 bg-red-50">
+          <p className="font-mono text-xs text-red-600 border border-red-200 px-3 py-2 bg-red-50">
             {error}
           </p>
         )}
@@ -166,7 +166,7 @@ export default function BookingForm({ resourceId, onSuccess }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-black text-white font-mono text-sm uppercase tracking-widest py-3 hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="w-full bg-zinc-900 text-white font-mono text-sm uppercase tracking-widest py-3 hover:bg-zinc-800 transition-colors disabled:opacity-50"
         >
           {loading ? "Submitting..." : "Submit Request"}
         </button>

@@ -35,7 +35,7 @@ export default function BookingsPage() {
       .put(
         `${API_BASE}/api/bookings/${id}/status`,
         { status, reason: reasonInputs[id] || "" },
-        { withCredentials: true }
+        { withCredentials: true },
       )
       .then(fetchBookings);
   };
@@ -49,14 +49,14 @@ export default function BookingsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6 border-b-2 border-black pb-2">
-        <h2 className="font-mono text-lg uppercase tracking-widest">
+      <div className="flex items-center justify-between mb-6 border-b-2 border-zinc-900 pb-2">
+        <h2 className="font-mono text-lg uppercase tracking-widest text-zinc-900">
           {isAdmin ? "All Bookings" : "My Bookings"}
         </h2>
         {!isAdmin && (
           <button
             onClick={() => setShowForm(!showForm)}
-            className="font-mono text-xs uppercase tracking-widest border-2 border-black px-4 py-2 hover:bg-black hover:text-white transition-colors"
+            className="font-mono text-xs uppercase tracking-widest border-2 border-zinc-900 px-4 py-2 hover:bg-zinc-900 hover:text-white transition-colors"
           >
             {showForm ? "Close" : "+ New Booking"}
           </button>
@@ -75,16 +75,16 @@ export default function BookingsPage() {
       )}
 
       {loading ? (
-        <p className="font-mono text-xs text-black/40">Loading...</p>
+        <p className="font-mono text-xs text-zinc-500">Loading...</p>
       ) : (
         <div className="space-y-3">
           {bookings.map((b) => (
-            <div key={b.id} className="border-2 border-black p-4 bg-white">
+            <div key={b.id} className="border-2 border-zinc-900 p-4 bg-white">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-xs uppercase tracking-widest text-black/50">
+                <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">
                   Booking #{b.id} · Resource {b.resourceId}
                   {isAdmin && b.userId && (
-                    <span className="ml-2 text-black/40">· {b.userId}</span>
+                    <span className="ml-2 text-zinc-400">· {b.userId}</span>
                   )}
                 </span>
                 <span
@@ -93,13 +93,13 @@ export default function BookingsPage() {
                   {b.status}
                 </span>
               </div>
-              <p className="font-mono text-sm">{b.purpose}</p>
-              <p className="font-mono text-xs text-black/50 mt-1">
+              <p className="font-mono text-sm text-zinc-800">{b.purpose}</p>
+              <p className="font-mono text-xs text-zinc-500 mt-1">
                 {new Date(b.startTime).toLocaleString()} →{" "}
                 {new Date(b.endTime).toLocaleString()}
               </p>
               {b.adminReason && (
-                <p className="font-mono text-xs text-black/60 mt-1 border-l-2 border-black pl-2">
+                <p className="font-mono text-xs text-zinc-600 mt-1 border-l-2 border-zinc-900 pl-2">
                   Reason: {b.adminReason}
                 </p>
               )}
@@ -110,7 +110,7 @@ export default function BookingsPage() {
                   <input
                     type="text"
                     placeholder="Optional reason..."
-                    className="border border-black font-mono text-xs px-2 py-1 w-full"
+                    className="border border-zinc-900 font-mono text-xs px-2 py-1 w-full focus:outline-zinc-500"
                     value={reasonInputs[b.id] || ""}
                     onChange={(e) =>
                       setReasonInputs((r) => ({ ...r, [b.id]: e.target.value }))
@@ -135,7 +135,7 @@ export default function BookingsPage() {
             </div>
           ))}
           {bookings.length === 0 && (
-            <p className="font-mono text-xs text-black/40">No bookings yet.</p>
+            <p className="font-mono text-xs text-zinc-500">No bookings yet.</p>
           )}
         </div>
       )}
