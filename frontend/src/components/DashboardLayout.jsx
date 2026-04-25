@@ -132,6 +132,7 @@ export default function DashboardLayout() {
                 <img
                   src={user.picture}
                   alt={user.name}
+                  referrerPolicy="no-referrer"
                   className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover"
                 />
               ) : (
