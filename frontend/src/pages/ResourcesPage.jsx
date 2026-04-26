@@ -196,7 +196,10 @@ export default function ResourcesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {resources.map((r) => (
-            <div key={r.id} className="border-2 border-zinc-900 p-4 bg-white flex flex-col">
+            <div
+              key={r.id}
+              className="border-2 border-zinc-900 p-4 bg-white flex flex-col"
+            >
               <div className="flex items-center justify-between mb-3">
                 <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
                   #{r.id} · {r.type}
@@ -207,7 +210,7 @@ export default function ResourcesPage() {
               <h3 className="font-mono text-sm font-bold uppercase tracking-tight text-zinc-900 mb-2">
                 {r.name}
               </h3>
-              
+
               <div className="flex-1 space-y-1 mb-4">
                 <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-1">
                   <span className="font-bold">LOC:</span> {r.location}

@@ -171,7 +171,10 @@ export default function TicketsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {incidents.map((inc) => (
-            <div key={inc.id} className="border-2 border-zinc-900 p-4 bg-white flex flex-col">
+            <div
+              key={inc.id}
+              className="border-2 border-zinc-900 p-4 bg-white flex flex-col"
+            >
               <div className="flex items-center justify-between mb-3">
                 <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
                   #{inc.id}
@@ -189,7 +192,7 @@ export default function TicketsPage() {
                   </span>
                 </div>
               </div>
-              
+
               <p className="font-mono text-sm text-zinc-800 flex-1 font-bold uppercase tracking-tight mb-4">
                 {inc.description}
               </p>

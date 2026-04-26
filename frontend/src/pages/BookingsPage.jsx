@@ -79,7 +79,10 @@ export default function BookingsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {bookings.map((b) => (
-            <div key={b.id} className="border-2 border-zinc-900 p-4 bg-white flex flex-col">
+            <div
+              key={b.id}
+              className="border-2 border-zinc-900 p-4 bg-white flex flex-col"
+            >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
                   #{b.id} · Res {b.resourceId}
@@ -97,10 +100,12 @@ export default function BookingsPage() {
                 </p>
                 <div className="space-y-1">
                   <p className="font-mono text-[10px] text-zinc-500 flex items-center gap-1">
-                    <span className="font-bold">START:</span> {new Date(b.startTime).toLocaleString()}
+                    <span className="font-bold">START:</span>{" "}
+                    {new Date(b.startTime).toLocaleString()}
                   </p>
                   <p className="font-mono text-[10px] text-zinc-500 flex items-center gap-1">
-                    <span className="font-bold">END:</span> {new Date(b.endTime).toLocaleString()}
+                    <span className="font-bold">END:</span>{" "}
+                    {new Date(b.endTime).toLocaleString()}
                   </p>
                   {isAdmin && b.userId && (
                     <p className="font-mono text-[10px] text-zinc-400 italic truncate">
