@@ -194,80 +194,53 @@ export default function ResourcesPage() {
       {loading ? (
         <p className="font-mono text-xs text-zinc-500">Loading...</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-2 border-zinc-900 text-sm font-mono">
-            <thead className="bg-zinc-900 text-white">
-              <tr>
-                {[
-                  "ID",
-                  "Name",
-                  "Type",
-                  "Capacity",
-                  "Location",
-                  "Status",
-                  ...(isAdmin ? ["Actions"] : []),
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="text-left px-4 py-2 uppercase tracking-widest text-xs"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {resources.map((r) => (
+            <div key={r.id} className="border-2 border-zinc-900 p-4 bg-white flex flex-col">
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
+                  #{r.id} · {r.type}
+                </span>
+                {statusTag(r.status)}
+              </div>
+
+              <h3 className="font-mono text-sm font-bold uppercase tracking-tight text-zinc-900 mb-2">
+                {r.name}
+              </h3>
+              
+              <div className="flex-1 space-y-1 mb-4">
+                <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-1">
+                  <span className="font-bold">LOC:</span> {r.location}
+                </p>
+                <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest flex items-center gap-1">
+                  <span className="font-bold">CAP:</span> {r.capacity} PEOPLE
+                </p>
+              </div>
+
+              {isAdmin && (
+                <div className="mt-auto pt-4 border-t border-zinc-100 flex gap-2">
+                  <button
+                    onClick={() => openEdit(r)}
+                    className="flex-1 font-mono text-[10px] uppercase tracking-widest border-2 border-zinc-900 py-1.5 hover:bg-zinc-900 hover:text-white transition-all text-zinc-900"
                   >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {resources.map((r, i) => (
-                <tr
-                  key={r.id}
-                  className={i % 2 === 0 ? "bg-white" : "bg-zinc-50"}
-                >
-                  <td className="px-4 py-2 border-b border-zinc-200 text-zinc-700">
-                    {r.id}
-                  </td>
-                  <td className="px-4 py-2 border-b border-zinc-200 text-zinc-900 font-medium">
-                    {r.name}
-                  </td>
-                  <td className="px-4 py-2 border-b border-zinc-200 text-zinc-700">
-                    {r.type}
-                  </td>
-                  <td className="px-4 py-2 border-b border-zinc-200 text-zinc-700">
-                    {r.capacity}
-                  </td>
-                  <td className="px-4 py-2 border-b border-zinc-200 text-zinc-700">
-                    {r.location}
-                  </td>
-                  <td className="px-4 py-2 border-b border-zinc-200">
-                    {statusTag(r.status)}
-                  </td>
-                  {isAdmin && (
-                    <td className="px-4 py-2 border-b border-zinc-200">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => openEdit(r)}
-                          className="font-mono text-[10px] uppercase tracking-widest border border-zinc-900 px-2 py-0.5 hover:bg-zinc-900 hover:text-white transition-colors text-zinc-900"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(r.id)}
-                          className="font-mono text-[10px] uppercase tracking-widest border border-red-500 text-red-600 px-2 py-0.5 hover:bg-red-500 hover:text-white transition-colors"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {resources.length === 0 && (
-            <p className="font-mono text-xs text-zinc-500 mt-4">
-              No resources found.
-            </p>
-          )}
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="flex-1 font-mono text-[10px] uppercase tracking-widest border-2 border-red-500 text-red-600 py-1.5 hover:bg-red-500 hover:text-white transition-all"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+      )}
+      {!loading && resources.length === 0 && (
+        <p className="font-mono text-xs text-zinc-500 mt-4">
+          No resources found.
+        </p>
       )}
     </div>
   );
