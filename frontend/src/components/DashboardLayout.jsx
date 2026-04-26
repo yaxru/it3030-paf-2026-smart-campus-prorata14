@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   AlertTriangle,
   Bell,
+  Users,
   LogOut,
   Menu,
   X,
@@ -20,6 +21,7 @@ const navItems = [
   { to: "/dashboard/bookings", label: "Bookings", icon: CalendarCheck },
   { to: "/dashboard/tickets", label: "Tickets", icon: AlertTriangle },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
+  { to: "/dashboard/users", label: "Users", icon: Users, adminOnly: true },
 ];
 
 export default function DashboardLayout() {
@@ -71,30 +73,32 @@ export default function DashboardLayout() {
 
         {/* Nav links */}
         <nav className="flex-1 py-4 space-y-1 px-2">
-          {navItems.map(({ to, label, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-none border transition-colors
+          {navItems
+            .filter((item) => !item.adminOnly || user?.role === "ADMIN")
+            .map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-none border transition-colors
                  font-mono text-xs uppercase tracking-widest
                  ${
                    isActive
                      ? "bg-zinc-100 text-zinc-950 border-zinc-100"
                      : "border-transparent text-zinc-500 hover:text-white hover:border-zinc-700"
                  }`
-              }
-            >
-              <Icon size={16} className="shrink-0" />
-              {sidebarOpen && <span>{label}</span>}
-              {/* Unread badge on Notifications */}
-              {label === "Notifications" && unread > 0 && sidebarOpen && (
-                <span className="ml-auto bg-zinc-100 text-zinc-950 font-mono text-[10px] px-1.5 py-0.5 rounded-full">
-                  {unread}
-                </span>
-              )}
-            </NavLink>
-          ))}
+                }
+              >
+                <Icon size={16} className="shrink-0" />
+                {sidebarOpen && <span>{label}</span>}
+                {/* Unread badge on Notifications */}
+                {label === "Notifications" && unread > 0 && sidebarOpen && (
+                  <span className="ml-auto bg-zinc-100 text-zinc-950 font-mono text-[10px] px-1.5 py-0.5 rounded-full">
+                    {unread}
+                  </span>
+                )}
+              </NavLink>
+            ))}
         </nav>
 
         {/* Logout */}
