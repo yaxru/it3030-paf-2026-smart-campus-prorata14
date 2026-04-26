@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   AlertTriangle,
   Bell,
+  Users,
   LogOut,
   Menu,
   X,
@@ -20,6 +21,7 @@ const navItems = [
   { to: "/dashboard/bookings", label: "Bookings", icon: CalendarCheck },
   { to: "/dashboard/tickets", label: "Tickets", icon: AlertTriangle },
   { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
+  { to: "/dashboard/users", label: "Users", icon: Users, adminOnly: true },
 ];
 
 export default function DashboardLayout() {
@@ -47,22 +49,22 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 font-['Inter',sans-serif]">
+    <div className="flex h-screen bg-slate-100 font-['Inter',sans-serif]">
       {/* ── Sidebar ─────────────────────────────────────────────── */}
       <aside
-        className={`flex flex-col bg-black text-white transition-all duration-200
+        className={`flex flex-col bg-zinc-950 text-white transition-all duration-200
           ${sidebarOpen ? "w-56" : "w-16"} shrink-0`}
       >
         {/* Logo / Toggle */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-800">
           {sidebarOpen && (
-            <span className="font-mono text-xs uppercase tracking-widest text-white/70">
+            <span className="font-mono text-xs uppercase tracking-widest text-zinc-400">
               SmartCampus
             </span>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white/60 hover:text-white"
+            className="text-zinc-500 hover:text-white"
             aria-label="Toggle sidebar"
           >
             {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
@@ -71,37 +73,39 @@ export default function DashboardLayout() {
 
         {/* Nav links */}
         <nav className="flex-1 py-4 space-y-1 px-2">
-          {navItems.map(({ to, label, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-none border transition-colors
+          {navItems
+            .filter((item) => !item.adminOnly || user?.role === "ADMIN")
+            .map(({ to, label, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-none border transition-colors
                  font-mono text-xs uppercase tracking-widest
                  ${
                    isActive
-                     ? "bg-white text-black border-white"
-                     : "border-transparent text-white/60 hover:text-white hover:border-white/30"
+                     ? "bg-zinc-100 text-zinc-950 border-zinc-100"
+                     : "border-transparent text-zinc-500 hover:text-white hover:border-zinc-700"
                  }`
-              }
-            >
-              <Icon size={16} className="shrink-0" />
-              {sidebarOpen && <span>{label}</span>}
-              {/* Unread badge on Notifications */}
-              {label === "Notifications" && unread > 0 && sidebarOpen && (
-                <span className="ml-auto bg-white text-black font-mono text-[10px] px-1.5 py-0.5 rounded-full">
-                  {unread}
-                </span>
-              )}
-            </NavLink>
-          ))}
+                }
+              >
+                <Icon size={16} className="shrink-0" />
+                {sidebarOpen && <span>{label}</span>}
+                {/* Unread badge on Notifications */}
+                {label === "Notifications" && unread > 0 && sidebarOpen && (
+                  <span className="ml-auto bg-zinc-100 text-zinc-950 font-mono text-[10px] px-1.5 py-0.5 rounded-full">
+                    {unread}
+                  </span>
+                )}
+              </NavLink>
+            ))}
         </nav>
 
         {/* Logout */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-zinc-800">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full text-white/60 hover:text-white
+            className="flex items-center gap-3 w-full text-zinc-500 hover:text-white
                        font-mono text-xs uppercase tracking-widest"
           >
             <LogOut size={16} />
@@ -113,8 +117,8 @@ export default function DashboardLayout() {
       {/* ── Main area ────────────────────────────────────────────── */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top navbar */}
-        <header className="flex items-center justify-between bg-white border-b-2 border-black px-6 py-3 shrink-0">
-          <h1 className="font-mono text-sm uppercase tracking-widest text-black/70">
+        <header className="flex items-center justify-between bg-zinc-100 border-b-2 border-zinc-900 px-6 py-3 shrink-0">
+          <h1 className="font-mono text-sm uppercase tracking-widest text-zinc-800">
             Smart Campus Portal
           </h1>
 
@@ -122,21 +126,22 @@ export default function DashboardLayout() {
           {user ? (
             <div className="flex items-center gap-3">
               {/* Role tag */}
-              <span className="font-mono text-[10px] uppercase tracking-widest border border-black px-2 py-0.5 bg-black text-white">
+              <span className="font-mono text-[10px] uppercase tracking-widest border border-zinc-900 px-2 py-0.5 bg-zinc-900 text-white">
                 {user.role}
               </span>
-              <span className="font-mono text-xs text-black/60 hidden sm:block">
+              <span className="font-mono text-xs text-zinc-500 hidden sm:block">
                 {user.email}
               </span>
               {user.picture ? (
                 <img
                   src={user.picture}
                   alt={user.name}
-                  className="w-8 h-8 rounded-full border-2 border-black object-cover"
+                  referrerPolicy="no-referrer"
+                  className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover"
                 />
               ) : (
                 <div
-                  className="w-8 h-8 rounded-full border-2 border-black bg-black text-white
+                  className="w-8 h-8 rounded-full border-2 border-zinc-900 bg-zinc-900 text-white
                                 flex items-center justify-center font-mono text-xs"
                 >
                   {user.name?.[0]?.toUpperCase() ?? "?"}
@@ -144,14 +149,14 @@ export default function DashboardLayout() {
               )}
               <button
                 onClick={handleLogout}
-                className="font-mono text-xs uppercase tracking-widest border-2 border-black
-                           px-3 py-1 hover:bg-black hover:text-white transition-colors"
+                className="font-mono text-xs uppercase tracking-widest border-2 border-zinc-900
+                           px-3 py-1 hover:bg-zinc-900 hover:text-white transition-colors text-zinc-900"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+            <div className="w-8 h-8 rounded-full bg-zinc-200 animate-pulse" />
           )}
         </header>
 

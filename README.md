@@ -1,6 +1,6 @@
 # Smart Campus — SLIIT PAF 2026
 
-A full-stack Smart Campus management system built for the SLIIT Programming & Frameworks (PAF) module. The application provides Google OAuth2 authentication, role-based access control, and campus resource management through a REST API backed by a React SPA.
+A full-stack Smart Campus management system built for the SLIIT Programming & Frameworks (PAF) module. The application provides Google OAuth2 authentication, role-based access control, resource booking, incident ticketing, and real-time notifications through a REST API backed by a React SPA.
 
 ---
 
@@ -8,6 +8,7 @@ A full-stack Smart Campus management system built for the SLIIT Programming & Fr
 
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
+- [Team & Responsibilities](#team--responsibilities)
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
@@ -49,10 +50,23 @@ Spring Boot (localhost:8080)
         ▼
 PostgreSQL (Supabase)
    ├── user_profiles
-   └── resources
+   ├── resources
+   ├── bookings
+   ├── incidents + incident_images + incident_comments
+   └── notifications
 ```
 
 Session cookies (`JSESSIONID`) are used to maintain authentication state between the React SPA and the Spring Boot backend.
+
+---
+
+## Team & Responsibilities
+
+| Member    | Domain                             | Backend                                                                                                                        | Frontend                                                   |
+| --------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Member 01 | Facilities & Security              | `AuthController`, `UserController`, `SecurityConfig`, `WebConfig`                                                              | `DashboardLayout`, `LoginPage`, `ResourcesPage`, `App.jsx` |
+| Member 02 | Booking Engine & Logic             | `BookingController`, `BookingService`, `Booking` entity                                                                        | `BookingsPage`, `BookingForm`                              |
+| Member 03 | Incident Ticketing & Notifications | `IncidentController`, `NotificationController`, `IncidentService`, `NotificationService`, `Incident` + `Notification` entities | `TicketsPage`, `NotificationsPage`                         |
 
 ---
 
@@ -68,7 +82,19 @@ Session cookies (`JSESSIONID`) are used to maintain authentication state between
   - Only `ADMIN` can create, update, or delete resources.
   - Filter by type and minimum capacity.
 - **User Management (Admin)** — admins can list all users, filter technicians, and change user roles.
-- **Dashboard Layout** — collapsible sidebar with navigation links for Resources, Bookings, Tickets, and Notifications (placeholders ready for team members to implement).
+- **Booking System** — users can request time-slot bookings for campus resources.
+  - Conflict detection prevents double-booking of approved slots.
+  - Admins can approve or reject bookings with an optional reason.
+  - Notifications are sent to users when their booking status changes.
+- **Incident Ticketing** — users report maintenance or facility incidents tied to a resource.
+  - Supports LOW / HIGH priority and up to 3 image URL attachments.
+  - Admins assign incidents to technicians; status progresses OPEN → IN_PROGRESS → RESOLVED.
+  - Role-scoped views: users see their own tickets, technicians see assigned tickets, admins see all.
+  - Threaded comments on each incident.
+- **Notifications** — in-app notification feed per user with unread count badge.
+  - Notifications auto-generated on booking status changes and incident assignments.
+  - Mark individual notifications as read.
+- **Dashboard Layout** — collapsible sidebar with live unread-notification count badge.
 - **Global Exception Handling** — structured JSON error responses.
 - **CORS Configuration** — backend permits requests from `http://localhost:5173`.
 
@@ -83,36 +109,52 @@ it3030-paf-2026-smart-campus-prorata14/
 │   └── src/main/java/com/sliit/smartcampus/
 │       ├── SmartCampusApplication.java
 │       ├── config/
-│       │   ├── GlobalExceptionHandler.java   # Structured error responses
-│       │   ├── SecurityConfig.java           # Spring Security + OAuth2
-│       │   └── WebConfig.java                # CORS configuration
+│       │   ├── GlobalExceptionHandler.java        # Structured error responses
+│       │   ├── SecurityConfig.java                # Spring Security + OAuth2
+│       │   └── WebConfig.java                     # CORS configuration
 │       ├── controller/
-│       │   ├── AuthController.java           # GET /api/auth/me
-│       │   ├── ResourceController.java       # CRUD /api/resources
-│       │   └── UserController.java           # Admin user management
+│       │   ├── AuthController.java                # GET /api/auth/me
+│       │   ├── BookingController.java             # CRUD /api/bookings
+│       │   ├── IncidentController.java            # CRUD /api/incidents
+│       │   ├── NotificationController.java        # GET/PUT /api/notifications
+│       │   ├── ResourceController.java            # CRUD /api/resources
+│       │   └── UserController.java                # Admin user management
 │       ├── dto/
 │       │   └── ErrorResponse.java
 │       ├── entity/
-│       │   ├── Resource.java                 # resources table
-│       │   └── UserProfile.java              # user_profiles table
+│       │   ├── Booking.java                       # bookings table
+│       │   ├── Incident.java                      # incidents table (+ images, comments)
+│       │   ├── Notification.java                  # notifications table
+│       │   ├── Resource.java                      # resources table
+│       │   └── UserProfile.java                   # user_profiles table
 │       ├── repository/
+│       │   ├── BookingRepository.java
+│       │   ├── IncidentRepository.java
+│       │   ├── NotificationRepository.java
 │       │   ├── ResourceRepository.java
 │       │   └── UserProfileRepository.java
 │       └── service/
-│           ├── CustomOAuth2UserService.java  # Google login + role assignment
+│           ├── BookingService.java                # Conflict detection + booking lifecycle
+│           ├── CustomOAuth2UserService.java       # Google login + role assignment
+│           ├── IncidentService.java               # Ticket management + assignment
+│           ├── NotificationService.java           # Notification creation + queries
 │           └── ResourceService.java
 └── frontend/
     ├── package.json
     ├── vite.config.js
     └── src/
-        ├── App.jsx                           # Router configuration
+        ├── App.jsx                                # Router configuration
         ├── context/
-        │   └── UserContext.jsx               # Logged-in user context
+        │   └── UserContext.jsx                    # Logged-in user context
         ├── components/
-        │   └── DashboardLayout.jsx           # Sidebar + top navbar
+        │   ├── BookingForm.jsx                    # Booking submission form
+        │   └── DashboardLayout.jsx                # Collapsible sidebar + top navbar
         └── pages/
-            ├── LoginPage.jsx                 # Google Sign-in button
-            └── ResourcesPage.jsx             # Resource list + admin CRUD
+            ├── BookingsPage.jsx                   # Booking list + admin approve/reject
+            ├── LoginPage.jsx                      # Google Sign-in button
+            ├── NotificationsPage.jsx              # Notification feed + mark-as-read
+            ├── ResourcesPage.jsx                  # Resource list + admin CRUD
+            └── TicketsPage.jsx                    # Incident list + report form + assign
 ```
 
 ---
@@ -159,7 +201,7 @@ app.admin.emails=your-email@gmail.com
 
 ### 3. Frontend
 
-No additional configuration is needed for local development. The API base URL is set to `http://localhost:8080` inside the source files.
+No additional configuration is needed for local development. The API base URL is hard-coded to `http://localhost:8080` in each source file.
 
 ---
 
@@ -211,6 +253,32 @@ The frontend starts on **http://localhost:5173**.
 | `PUT`    | `/api/resources/{id}` | ADMIN         | Update an existing resource                              |
 | `DELETE` | `/api/resources/{id}` | ADMIN         | Delete a resource                                        |
 
+### Bookings
+
+| Method | Endpoint                    | Auth          | Description                                                               |
+| ------ | --------------------------- | ------------- | ------------------------------------------------------------------------- |
+| `POST` | `/api/bookings`             | Authenticated | Create a booking request (conflict-checked)                               |
+| `GET`  | `/api/bookings/my`          | Authenticated | List the current user's own bookings                                      |
+| `GET`  | `/api/bookings/all`         | ADMIN         | List all bookings (optional `?status=PENDING`)                            |
+| `PUT`  | `/api/bookings/{id}/status` | ADMIN         | Approve or reject a booking (`{ "status": "APPROVED", "reason": "..." }`) |
+
+### Incidents
+
+| Method | Endpoint                       | Auth          | Description                                                 |
+| ------ | ------------------------------ | ------------- | ----------------------------------------------------------- |
+| `POST` | `/api/incidents`               | Authenticated | Report a new incident (up to 3 image URLs)                  |
+| `GET`  | `/api/incidents`               | Authenticated | List incidents — role-scoped; optional `?status=&priority=` |
+| `PUT`  | `/api/incidents/{id}/assign`   | ADMIN         | Assign a technician (`{ "technicianEmail": "..." }`)        |
+| `POST` | `/api/incidents/{id}/comments` | Authenticated | Add a comment to an incident (`{ "message": "..." }`)       |
+
+### Notifications
+
+| Method | Endpoint                          | Auth          | Description                             |
+| ------ | --------------------------------- | ------------- | --------------------------------------- |
+| `GET`  | `/api/notifications`              | Authenticated | List all notifications for current user |
+| `GET`  | `/api/notifications/unread-count` | Authenticated | Returns `{ "count": N }`                |
+| `PUT`  | `/api/notifications/{id}/read`    | Authenticated | Mark a notification as read             |
+
 ### User Management (Admin only)
 
 | Method | Endpoint                        | Auth  | Description                                       |
@@ -223,13 +291,13 @@ The frontend starts on **http://localhost:5173**.
 
 ## Roles & Permissions
 
-| Role         | Description                                        | Assigned By                                                |
-| ------------ | -------------------------------------------------- | ---------------------------------------------------------- |
-| `USER`       | Default role for all new Google sign-ins           | Automatic                                                  |
-| `TECHNICIAN` | Maintenance staff; handles assigned incidents      | Admin via API                                              |
-| `ADMIN`      | Full access including resource and user management | Seeded via `app.admin.emails` or promoted by another admin |
+| Role         | Description                                                                        | Assigned By                                                |
+| ------------ | ---------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `USER`       | Default role for all new Google sign-ins; can book resources and report incidents  | Automatic                                                  |
+| `TECHNICIAN` | Maintenance staff; sees only incidents assigned to them                            | Admin via API                                              |
+| `ADMIN`      | Full access: resource CRUD, user management, booking approval, incident assignment | Seeded via `app.admin.emails` or promoted by another admin |
 
-Role enforcement uses Spring Security's `@PreAuthorize("hasRole('ADMIN')")` on controller methods. The frontend conditionally renders admin controls (Add / Edit / Delete buttons) based on the role returned by `/api/auth/me`.
+Role enforcement uses Spring Security's `@PreAuthorize` on controller methods. The frontend conditionally renders admin controls based on the role returned by `/api/auth/me`.
 
 ---
 
@@ -257,5 +325,58 @@ Role enforcement uses Spring Security's `@PreAuthorize("hasRole('ADMIN')")` on c
 | `capacity` | INTEGER        | Seating / unit capacity       |
 | `location` | VARCHAR        | Physical location description |
 | `status`   | VARCHAR        | `ACTIVE` or `OUT_OF_SERVICE`  |
+
+### `bookings`
+
+| Column         | Type           | Notes                                          |
+| -------------- | -------------- | ---------------------------------------------- |
+| `id`           | BIGSERIAL (PK) | Auto-generated                                 |
+| `resource_id`  | BIGINT (FK)    | References resources                           |
+| `user_id`      | VARCHAR        | Email of the requesting user                   |
+| `start_time`   | TIMESTAMP      | Booking start                                  |
+| `end_time`     | TIMESTAMP      | Booking end                                    |
+| `purpose`      | VARCHAR        | Reason for booking                             |
+| `status`       | VARCHAR        | `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED` |
+| `admin_reason` | VARCHAR        | Optional note from admin on approve/reject     |
+
+### `incidents`
+
+| Column        | Type           | Notes                             |
+| ------------- | -------------- | --------------------------------- |
+| `id`          | BIGSERIAL (PK) | Auto-generated                    |
+| `resource_id` | BIGINT (FK)    | References resources              |
+| `reported_by` | VARCHAR        | Email of reporting user           |
+| `description` | VARCHAR(1000)  | Issue description                 |
+| `priority`    | VARCHAR        | `LOW` or `HIGH`                   |
+| `status`      | VARCHAR        | `OPEN`, `IN_PROGRESS`, `RESOLVED` |
+| `assigned_to` | VARCHAR        | Technician email (nullable)       |
+| `created_at`  | TIMESTAMP      | Auto-set on creation              |
+| `updated_at`  | TIMESTAMP      | Auto-updated on every change      |
+
+#### `incident_images` (element collection)
+
+| Column        | Type    | Notes                   |
+| ------------- | ------- | ----------------------- |
+| `incident_id` | BIGINT  | FK to incidents         |
+| `image_url`   | VARCHAR | Up to 3 URLs per ticket |
+
+#### `incident_comments` (embedded collection)
+
+| Column        | Type      | Notes                    |
+| ------------- | --------- | ------------------------ |
+| `incident_id` | BIGINT    | FK to incidents          |
+| `author`      | VARCHAR   | Commenter email          |
+| `message`     | VARCHAR   | Comment body             |
+| `posted_at`   | TIMESTAMP | Timestamp of the comment |
+
+### `notifications`
+
+| Column       | Type           | Notes                |
+| ------------ | -------------- | -------------------- |
+| `id`         | BIGSERIAL (PK) | Auto-generated       |
+| `user_id`    | VARCHAR        | Recipient email      |
+| `message`    | VARCHAR(500)   | Notification body    |
+| `is_read`    | BOOLEAN        | Defaults to `false`  |
+| `created_at` | TIMESTAMP      | Auto-set on creation |
 
 Schema is managed by Hibernate (`spring.jpa.hibernate.ddl-auto=update`) — tables are created automatically on first run.

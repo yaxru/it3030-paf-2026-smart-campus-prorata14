@@ -96,7 +96,7 @@ export default function TicketsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6 border-b-2 border-black pb-2">
+      <div className="flex items-center justify-between mb-6 border-b-2 border-zinc-900 pb-2 text-zinc-900">
         <h2 className="font-mono text-lg uppercase tracking-widest">
           {isTechnician ? "My Assigned Tickets" : "Incident Tickets"}
         </h2>
@@ -104,7 +104,7 @@ export default function TicketsPage() {
         {!isAdmin && !isTechnician && (
           <button
             onClick={() => setShowForm(!showForm)}
-            className="font-mono text-xs uppercase tracking-widest border-2 border-black px-4 py-2 hover:bg-black hover:text-white transition-colors"
+            className="font-mono text-xs uppercase tracking-widest border-2 border-zinc-900 px-4 py-2 hover:bg-zinc-900 hover:text-white transition-colors"
           >
             {showForm ? "Close" : "+ New Ticket"}
           </button>
@@ -114,16 +114,16 @@ export default function TicketsPage() {
       {showForm && !isAdmin && !isTechnician && (
         <form
           onSubmit={handleSubmit}
-          className="border-2 border-black p-6 mb-8 bg-white space-y-4 max-w-lg"
+          className="border-2 border-zinc-900 p-6 mb-8 bg-white space-y-4 max-w-lg"
         >
-          <h3 className="font-mono text-sm uppercase tracking-widest border-b border-black pb-2">
+          <h3 className="font-mono text-sm uppercase tracking-widest border-b border-zinc-900 pb-2 text-zinc-900">
             Report Incident
           </h3>
           <select
             required
             value={form.resourceId}
             onChange={(e) => setForm({ ...form, resourceId: e.target.value })}
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500"
           >
             <option value="">— select a resource —</option>
             {resources.map((r) => (
@@ -139,12 +139,12 @@ export default function TicketsPage() {
             rows={3}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none resize-none"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500 resize-none"
           />
           <select
             value={form.priority}
             onChange={(e) => setForm({ ...form, priority: e.target.value })}
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500"
           >
             <option value="LOW">LOW</option>
             <option value="HIGH">HIGH</option>
@@ -154,12 +154,12 @@ export default function TicketsPage() {
             placeholder="Image URLs (comma-separated, max 3)"
             value={form.imageUrls}
             onChange={(e) => setForm({ ...form, imageUrls: e.target.value })}
-            className="w-full border-2 border-black px-3 py-2 font-mono text-sm focus:outline-none"
+            className="w-full border-2 border-zinc-900 px-3 py-2 font-mono text-sm focus:outline-none focus:border-zinc-500"
           />
           {error && <p className="font-mono text-xs text-red-600">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-black text-white font-mono text-xs uppercase tracking-widest py-3 hover:bg-gray-800 transition-colors"
+            className="w-full bg-zinc-900 text-white font-mono text-xs uppercase tracking-widest py-3 hover:bg-zinc-800 transition-colors"
           >
             Submit Ticket
           </button>
@@ -167,44 +167,55 @@ export default function TicketsPage() {
       )}
 
       {loading ? (
-        <p className="font-mono text-xs text-black/40">Loading...</p>
+        <p className="font-mono text-xs text-zinc-500">Loading...</p>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {incidents.map((inc) => (
-            <div key={inc.id} className="border-2 border-black p-4 bg-white">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-mono text-xs text-black/50 uppercase tracking-widest">
+            <div
+              key={inc.id}
+              className="border-2 border-zinc-900 p-4 bg-white flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
                   #{inc.id}
                 </span>
-                <span
-                  className={`font-mono text-[10px] uppercase tracking-widest border px-2 py-0.5 ${priorityColors[inc.priority]}`}
-                >
-                  {inc.priority}
-                </span>
-                <span
-                  className={`font-mono text-[10px] uppercase tracking-widest border px-2 py-0.5 ${statusColors[inc.status]}`}
-                >
-                  {inc.status}
-                </span>
+                <div className="flex gap-1">
+                  <span
+                    className={`font-mono text-[10px] uppercase tracking-widest border px-2 py-0.5 ${priorityColors[inc.priority]}`}
+                  >
+                    {inc.priority}
+                  </span>
+                  <span
+                    className={`font-mono text-[10px] uppercase tracking-widest border px-2 py-0.5 ${statusColors[inc.status]}`}
+                  >
+                    {inc.status}
+                  </span>
+                </div>
               </div>
-              <p className="font-mono text-sm">{inc.description}</p>
-              {inc.assignedTo ? (
-                <p className="font-mono text-xs text-black/50 mt-1">
-                  Assigned: {inc.assignedTo}
-                </p>
-              ) : (
-                isAdmin && (
-                  <p className="font-mono text-xs text-black/30 mt-1">
-                    Not assigned yet
+
+              <p className="font-mono text-sm text-zinc-800 flex-1 font-bold uppercase tracking-tight mb-4">
+                {inc.description}
+              </p>
+
+              <div className="space-y-1 mb-4">
+                {inc.assignedTo ? (
+                  <p className="font-mono text-[10px] text-zinc-600 flex items-center gap-1">
+                    <span className="font-bold">TECH:</span> {inc.assignedTo}
                   </p>
-                )
-              )}
+                ) : (
+                  isAdmin && (
+                    <p className="font-mono text-[10px] text-zinc-400 italic">
+                      Pending Assignment
+                    </p>
+                  )
+                )}
+              </div>
 
               {/* Admin: assign-technician control */}
               {isAdmin && inc.status !== "RESOLVED" && (
-                <div className="mt-3 flex gap-2">
+                <div className="mt-auto pt-4 border-t border-zinc-100 space-y-2">
                   <select
-                    className="flex-1 border border-black font-mono text-xs px-2 py-1"
+                    className="w-full border-2 border-zinc-900 font-mono text-[10px] px-2 py-1.5 focus:outline-none focus:bg-zinc-50"
                     value={assignInputs[inc.id] || ""}
                     onChange={(e) =>
                       setAssignInputs((a) => ({
@@ -213,27 +224,27 @@ export default function TicketsPage() {
                       }))
                     }
                   >
-                    <option value="">— assign technician —</option>
+                    <option value="">— select tech —</option>
                     {technicians.map((t) => (
                       <option key={t.email} value={t.email}>
-                        {t.name} ({t.email})
+                        {t.name}
                       </option>
                     ))}
                   </select>
                   <button
                     onClick={() => assignTechnician(inc.id)}
-                    className="font-mono text-xs uppercase tracking-widest border-2 border-black px-3 py-1 hover:bg-black hover:text-white transition-colors"
+                    className="w-full font-mono text-[10px] uppercase tracking-widest border-2 border-zinc-900 py-1.5 hover:bg-zinc-900 hover:text-white transition-all text-zinc-900"
                   >
-                    Assign
+                    Assign Tech
                   </button>
                 </div>
               )}
             </div>
           ))}
-          {incidents.length === 0 && (
-            <p className="font-mono text-xs text-black/40">No tickets found.</p>
-          )}
         </div>
+      )}
+      {!loading && incidents.length === 0 && (
+        <p className="font-mono text-xs text-zinc-500">No tickets found.</p>
       )}
     </div>
   );
