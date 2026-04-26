@@ -49,7 +49,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-zinc-50 font-['Inter',sans-serif]">
+    <div className="flex h-screen bg-slate-100 font-['Inter',sans-serif]">
       {/* ── Sidebar ─────────────────────────────────────────────── */}
       <aside
         className={`flex flex-col bg-zinc-950 text-white transition-all duration-200
